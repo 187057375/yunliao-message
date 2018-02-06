@@ -1,6 +1,7 @@
 package com.yunliao.server.listen.websocket;
 
 import com.yunliao.server.handler.MessageQueue;
+import com.yunliao.server.listen.ChannelMap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -109,10 +110,10 @@ public class WebsocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
         //在原始数据流加入当前chanelId，有没有更好的设计方式？
         byte[] buf =clientMessage.getBytes("UTF-8");//原始数据
-        byte[] message = new byte[buf.length+8];//队列的消息
-        byte[] chanelId = ctx.channel().id().toString().getBytes("UTF-8");
+        byte[] message = new byte[buf.length+ ChannelMap.channelIdLenth];//队列的消息
+        byte[] chanelId = (ChannelMap.WEBSOCKET+ctx.channel().id()).getBytes("UTF-8");
         System.arraycopy(chanelId, 0, message, 0, chanelId.length);
-        System.arraycopy(buf, 0, message, 8, buf.length);
+        System.arraycopy(buf, 0, message, ChannelMap.channelIdLenth, buf.length);
         //加入消息队列
         MessageQueue.push(message);
 

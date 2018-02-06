@@ -1,5 +1,6 @@
 package com.yunliao.server.listen.websocket;
 
+import com.yunliao.server.listen.ChannelMap;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -7,29 +8,29 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class WebsocketServerInitializer extends ChannelInitializer<SocketChannel> {
-    public  static ConcurrentHashMap chanelMap = new ConcurrentHashMap<String,Object>();
 
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {  // (2)
-        chanelMap.put(ctx.channel().id().toString(),ctx.channel());
+
+        ChannelMap.chanelMap.put(ChannelMap.WEBSOCKET+ctx.channel().id().toString(),ctx.channel());
         //System.out.println("chanel add： "+ ctx.channel().id());
 
     }
 
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         ChannelPipeline p = socketChannel.pipeline();
-
+        p.addLast("channelIdle", new IdleStateHandler(120, 30, 20, TimeUnit.SECONDS));
+        p.addLast("doHeartBeat", new WebSocketHeartBeatHandler());
         p.addLast(new HttpServerCodec());
         p.addLast(new HttpObjectAggregator(1048576));
         p.addLast(new WebSocketServerCompressionHandler());
-        //p.addLast(new WebSocketServerHandler());
-        //p.addLast("encoder", new StringEncoder());
         p.addLast("business", new WebsocketServerHandler());
     }
     private void remove(ChannelHandlerContext ctx) {
-        chanelMap.remove(ctx.channel().id().toString());
+        ChannelMap.chanelMap.remove(ctx.channel().id().toString());
     }
 }

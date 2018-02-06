@@ -13,9 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
  *          Copyright 2018 by PreTang
  */
 public class RuterTableLocal {
-    //存放用户key-session
+    //存放 用户key-session
     public static ConcurrentHashMap userSessioinMap = new ConcurrentHashMap<String, Object>();
-    //存放chanelkey-session
+    //存放 chanelkey-session
     public static ConcurrentHashMap chanelSessioinMap = new ConcurrentHashMap<String, Object>();
 
     public static boolean redisRuteTable = false;

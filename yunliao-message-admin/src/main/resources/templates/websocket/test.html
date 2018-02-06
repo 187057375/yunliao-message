@@ -5,51 +5,35 @@
     <title>UserInfo</title>
 </head>
 <body>
-<h3>websoket测试12345555</h3>
-<input id="testInput" value="hello"/>
-<button onclick="submit()">发送</button>
+<h3>websoket im 测试</h3>
+
+
+<input id="testRegister" value="13055556666"/>
+<button onclick="register()">注册</button>
+
+<p></p>
+to
+<input id="toUser" value="13055557777"/>:
+<input id="testMsg" value="hello"/>
+<button onclick="sendMsg()">发送</button>
+
+<p></p>
+
+<textarea id="msgPanel"></textarea>
 </body>
 
 <script type="text/javascript" src="/js/jquery.js" ></script>
+<script type="text/javascript" src="/js/yunliao.js" ></script>
+
 <script>
-    $(document).ready(function(){
-        connectYunliaoServer();
-    });
-    function submit() {
-         var value = $("#testInput").val();
-         websocket.send(value);
-    }
+
+
     var websocket;
-
-    function connectYunliaoServer(){
-        var url = "ws://localhost:8999";
-        websocket = new WebSocket(url);
-        websocket.onopen = function(){
-
-        }// 连接打开
-        websocket.onmessage = function(event){
-            var data = JSON.parse(event.data);
-            if (data.type == "json"){
-                var content = data.content;
-
-            } else {
-                if (data.content = "HEARTBEAT"){// 心跳检测
-                    websocket.send("ACK_HEARTBEAT");
-                }
-            }
-        }
-        websocket.onclose = function(){
-            setTimeout(function(){
-                connectYunliaoServer();
-            }, 3000);
-        }
-        websocket.onerror =  function(event){
-            alert(event.message())
-        }
-    }
-
-
+    $(document).ready(function(){
+        websocket = connectYunliaoServer();
+    });
 
 
 </script>
+
 </html>

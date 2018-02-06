@@ -53,8 +53,8 @@ public final class EchoClientbak {
                     outputStream.writeByte(0x01);//消息标志，请求
                     outputStream.writeByte(0x02);//消息类型, 注册
                     outputStream.writeByte(0x01);//请求成功
-                    outputStream.writeInt("13055556666".getBytes("UTF-8").length);
-                    outputStream.write("13055556666".getBytes("UTF-8"));
+                    outputStream.writeInt("19988881111".getBytes("UTF-8").length);
+                    outputStream.write("19988881111".getBytes("UTF-8"));
                     ByteBuf buf = f.channel().alloc().buffer();
                     buf.writeBytes(byteOut.toByteArray());
                     f.channel().writeAndFlush(buf);
@@ -68,8 +68,8 @@ public final class EchoClientbak {
                     outputStream.writeByte(0x01);//请求成功
 
                     ChatMessage chatMessage = new ChatMessage();
-                    chatMessage.setFromId("13055556666");
-                    chatMessage.setToId("19988880000");
+                    chatMessage.setFromId("19988881111");
+                    chatMessage.setToId("13055556666");
                     chatMessage.setMsg("hello啊");
                     String msg = JSON.toJSONString(chatMessage);
                     outputStream.writeInt(msg.getBytes("UTF-8").length);

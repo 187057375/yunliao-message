@@ -27,7 +27,7 @@ public class MessageQueueProcessThread implements Runnable {
             try {
                 byte[] in = (byte[]) MessageQueue.poll();
                 if(in == null){
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                 }else{
                     logger.info("读取到消息并进行处理:"+ Hex.encodeHexString(in));
                     Message message = MessageDecode.decode(in);

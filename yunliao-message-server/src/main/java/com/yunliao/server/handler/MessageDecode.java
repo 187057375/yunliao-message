@@ -1,5 +1,6 @@
 package com.yunliao.server.handler;
 
+import com.yunliao.server.listen.ChannelMap;
 import org.apache.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
@@ -21,8 +22,8 @@ public class MessageDecode {
         DataInputStream input = new DataInputStream(new ByteArrayInputStream(in));
 
 
-        byte[] chanelIdByte =new byte[8];
-        input.read(chanelIdByte,0,8);
+        byte[] chanelIdByte =new byte[ChannelMap.channelIdLenth];
+        input.read(chanelIdByte,0,ChannelMap.channelIdLenth);
         String chanelId =  new String(chanelIdByte);
 
 
@@ -36,7 +37,7 @@ public class MessageDecode {
         byte type = input.readByte();
         byte status = input.readByte();
         int bodyLength = input.readInt();     // 确认消息体长度
-        if (bodyLength != (in.length-16)) {
+        if (bodyLength != (in.length-(ChannelMap.channelIdLenth+8))) {
             logger.info("消息体长度不一致");
             return null;
         }
