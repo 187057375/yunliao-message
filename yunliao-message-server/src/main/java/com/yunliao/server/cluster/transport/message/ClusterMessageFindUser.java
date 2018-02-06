@@ -1,4 +1,4 @@
-package com.yunliao.server.cluster.transport;
+package com.yunliao.server.cluster.transport.message;
 
 /**
  * 服务间通讯-查找用户消息

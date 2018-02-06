@@ -1,6 +1,7 @@
 package com.yunliao.server.handler.im.chat.ruting;
 
 import com.alibaba.fastjson.JSON;
+import com.yunliao.server.cluster.transport.message.ClusterMessage;
 import com.yunliao.server.handler.Message;
 import com.yunliao.server.handler.im.UserSession;
 import com.yunliao.server.handler.im.chat.send.SendMessage;
@@ -32,11 +33,12 @@ public class RuterTable {
                 message.setToId(chatMessage.getToId());
                 message.setFromId(chatMessage.getFromId());
                 SendMessage.send(message);
-            } else {//本地没有查询到，
-                //todo 广播寻址
-                //消息回去继续等待发送？是否需要延长几秒再发？
-                //MessageQueue.push(message.getRaw());
-                throw  new Exception("没有找到目标");
+            } else {//本地没有查询到，去redis查，或者主路由查（还没有实现）
+                ClusterMessage clusterMessage = new ClusterMessage();
+                clusterMessage.setMessage(message);
+                clusterMessage.setType(ClusterMessage.TYPE_CHAT);
+                clusterMessage.setToId(chatMessage.getToId());
+                RuterTableForOther.findServer(clusterMessage);
             }
         }else{
             throw  new Exception(message.getFromChanel()+"没有登录");
