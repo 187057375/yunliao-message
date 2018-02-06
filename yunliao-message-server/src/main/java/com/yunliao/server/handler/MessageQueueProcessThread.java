@@ -44,7 +44,9 @@ public class MessageQueueProcessThread implements Runnable {
                             throw new Exception("暂时还不支持");
                         }
                     }else{
+
                         logger.info("非法消息:"+ Hex.encodeHexString(in));
+                        logger.info("       :"+ new String(in));
                     }
                 }
             } catch (Exception e) {
