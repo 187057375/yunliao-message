@@ -1,4 +1,4 @@
-package com.yunliao.server.test;
+package com.yunliao.server.cluster.client;
 
 import com.alibaba.fastjson.JSON;
 import com.yunliao.server.handler.im.chat.ruting.ChatMessage;
@@ -15,7 +15,7 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 
 
-public final class EchoClientbak {
+public final class ClusterClient {
  
     static final String HOST = System.getProperty("host", "127.0.0.1");
     static final int PORT = Integer.parseInt(System.getProperty("port", "9000"));
@@ -33,8 +33,7 @@ public final class EchoClientbak {
              .handler(new ChannelInitializer<SocketChannel>() {
                  public void initChannel(SocketChannel ch) throws Exception {
                      ChannelPipeline p = ch.pipeline();
-                    // p.addLast("encoder", new StringEncoder());
-                     p.addLast(new EchoClientHandlerBak());
+                     p.addLast(new ClusterClientHandler());
                  }
              });
 

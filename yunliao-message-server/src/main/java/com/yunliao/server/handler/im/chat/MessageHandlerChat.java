@@ -2,7 +2,6 @@ package com.yunliao.server.handler.im.chat;
 
 import com.yunliao.server.handler.Message;
 import com.yunliao.server.handler.MessageHandler;
-import com.yunliao.server.handler.im.chat.handler.RuterHandler;
 import com.yunliao.server.handler.im.chat.ruting.RuterTable;
 
 /**
@@ -18,6 +17,5 @@ public class MessageHandlerChat extends MessageHandler{
      */
     public void process(Message message) throws Exception {
         RuterTable.searchAndSetRuter(message);
-        RuterHandler.process(message);
     }
 }

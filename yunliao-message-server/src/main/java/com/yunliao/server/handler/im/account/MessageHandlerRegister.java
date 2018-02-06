@@ -2,7 +2,7 @@ package com.yunliao.server.handler.im.account;
 
 import com.yunliao.server.handler.Message;
 import com.yunliao.server.handler.MessageHandler;
-import com.yunliao.server.handler.im.chat.ruting.RuterTableLocal;
+import com.yunliao.server.handler.im.chat.ruting.RuterTable;
 import com.yunliao.server.handler.im.UserSession;
 
 /**
@@ -26,8 +26,8 @@ public class MessageHandlerRegister extends MessageHandler{
         userSession.setChanelId(message.getFromChanel());
 
         //@todo 注册成功后，账户写入数据库、集群环境下广播自己位置、返回客户端信息（据具体协议）
-        RuterTableLocal.userSessioinMap.put(registerKey, userSession);
-        RuterTableLocal.chanelSessioinMap.put(message.getFromChanel(), userSession);
+        RuterTable.userSessioinMap.put(registerKey, userSession);
+        RuterTable.chanelSessioinMap.put(message.getFromChanel(), userSession);
         message = null;
     }
 }

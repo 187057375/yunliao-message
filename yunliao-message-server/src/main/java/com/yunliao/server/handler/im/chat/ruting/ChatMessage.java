@@ -1,4 +1,4 @@
-package com.yunliao.server.handler.im.chat;
+package com.yunliao.server.handler.im.chat.ruting;
 
 /**
  * @author peter

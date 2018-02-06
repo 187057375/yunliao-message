@@ -6,9 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/**
- * 消息路由服务
- */
+
 public class MessageQueueProcessServer {
 
     public static ThreadPoolExecutor executor = new ThreadPoolExecutor(20, 300, 2000, TimeUnit.MILLISECONDS,
