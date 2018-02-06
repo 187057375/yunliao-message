@@ -18,7 +18,7 @@ public class Application {
     }
 
     private static void startServer(){
-        //启动TCP监听服务.
+        //启动TCP监听服务...
         try{
             TcpServer.start(9000);
         } catch (Exception e){
