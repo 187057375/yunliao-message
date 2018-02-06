@@ -1,5 +1,6 @@
 package com.yunliao.server.listen.websocket;
 
+import com.yunliao.server.handler.MessageQueue;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -8,10 +9,13 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.util.CharsetUtil;
+import org.apache.log4j.Logger;
 
 public class WebsocketServerHandler extends SimpleChannelInboundHandler<Object> {
+    private static final Logger logger = Logger.getLogger(WebsocketServerHandler.class);
 
-    // websocket握手连接
+
+    //websocket握手连接
     private WebSocketServerHandshaker handshaker;
 
     @Override
@@ -36,21 +40,21 @@ public class WebsocketServerHandler extends SimpleChannelInboundHandler<Object> 
      */
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (msg instanceof FullHttpRequest) {
+        if (msg instanceof FullHttpRequest) {//握手协议
             handleHttpRequest(ctx, (FullHttpRequest) msg);
-        } else if (msg instanceof WebSocketFrame) {
+        } else if (msg instanceof WebSocketFrame) {//处理数据
             handleWebSocketFrame(ctx, (WebSocketFrame) msg);
         }
     }
 
     /**
-     * 处理http请求
+     * 处理http请求，握手协议
      * @param ctx
      * @param req
      */
     private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) {
-        System.out.println("---------------------");
-        System.out.println(req.toString());
+        logger.info("--------http-------------");
+        logger.info(req.toString());
         // Handle a bad request.
         if (!req.decoderResult().isSuccess()) {
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.BAD_REQUEST));
@@ -67,7 +71,8 @@ public class WebsocketServerHandler extends SimpleChannelInboundHandler<Object> 
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND));
             return;
         }*/
-        //初始化Handshake
+
+        //Handshake
         WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(req.headers().get(HttpHeaderNames.HOST), null, true);
         handshaker = wsFactory.newHandshaker(req);
         if (handshaker == null) {
@@ -79,7 +84,7 @@ public class WebsocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
     }
 
-    private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
+    private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception{
         if (frame instanceof CloseWebSocketFrame) {
             handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
             return;
@@ -94,11 +99,22 @@ public class WebsocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
 
         String clientMessage = ((TextWebSocketFrame) frame).text();
-        System.out.println("------");
-        System.out.println(clientMessage);
+        logger.info("--------websocket frame-------------");
+        logger.info(clientMessage);
+
         if (CLIENT_ACK_HEARTBEAT.equals(clientMessage)){// 心跳检测,不处理
             return;
         }
+
+
+        //在原始数据流加入当前chanelId，有没有更好的设计方式？
+        byte[] buf =clientMessage.getBytes("UTF-8");//原始数据
+        byte[] message = new byte[buf.length+8];//队列的消息
+        byte[] chanelId = ctx.channel().id().toString().getBytes("UTF-8");
+        System.arraycopy(chanelId, 0, message, 0, chanelId.length);
+        System.arraycopy(buf, 0, message, 8, buf.length);
+        //加入消息队列
+        MessageQueue.push(message);
 
     }
     // 客户端响应心跳字符串
