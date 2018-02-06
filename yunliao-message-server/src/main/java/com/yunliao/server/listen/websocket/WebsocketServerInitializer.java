@@ -26,7 +26,6 @@ public class WebsocketServerInitializer extends ChannelInitializer<SocketChannel
         p.addLast(new HttpObjectAggregator(1048576));
         p.addLast(new WebSocketServerCompressionHandler());
         //p.addLast(new WebSocketServerHandler());
-
         //p.addLast("encoder", new StringEncoder());
         p.addLast("business", new WebsocketServerHandler());
     }

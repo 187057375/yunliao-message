@@ -27,7 +27,7 @@ public class WebsocketServer {
             bootstrap.childHandler(new WebsocketServerInitializer());
 
             bootstrap.bind(port).sync();
-            logger.info("TcpServer启动成功,端口:" + port + ".");
+            logger.info("WebSoketServer启动成功,端口:" + port + ".");
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,9 +1,8 @@
 package com.yunliao.server.listen.websocket;
 
-import com.yunliao.server.listen.websocket.handler.DefaultWebSocketMessageHandler;
-import com.yunliao.server.listen.websocket.handler.WebSocketSubscribeHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
@@ -14,7 +13,6 @@ public class WebsocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
     // websocket握手连接
     private WebSocketServerHandshaker handshaker;
-    private DefaultWebSocketMessageHandler webSocketMessageHandler;
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
@@ -51,6 +49,8 @@ public class WebsocketServerHandler extends SimpleChannelInboundHandler<Object> 
      * @param req
      */
     private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) {
+        System.out.println("---------------------");
+        System.out.println(req.toString());
         // Handle a bad request.
         if (!req.decoderResult().isSuccess()) {
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.BAD_REQUEST));
@@ -63,14 +63,20 @@ public class WebsocketServerHandler extends SimpleChannelInboundHandler<Object> 
             return;
         }
 
-        if ("/favicon.ico".equals(req.uri()) || ("/".equals(req.uri()))) {
+        /*if ("/favicon.ico".equals(req.uri()) || ("/".equals(req.uri()))) {
             sendHttpResponse(ctx, req, new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND));
             return;
+        }*/
+        //初始化Handshake
+        WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(req.headers().get(HttpHeaderNames.HOST), null, true);
+        handshaker = wsFactory.newHandshaker(req);
+        if (handshaker == null) {
+            WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
+        } else {
+            ChannelFuture channelFuture = handshaker.handshake(ctx.channel(), req);
+            ctx.fireChannelRead(req.retain());
         }
-        // Handshake
 
-        handshaker = new WebSocketSubscribeHandler().hand(ctx, req);
-        webSocketMessageHandler = new DefaultWebSocketMessageHandler();
     }
 
     private void handleWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) {
@@ -85,8 +91,19 @@ public class WebsocketServerHandler extends SimpleChannelInboundHandler<Object> 
         if (!(frame instanceof TextWebSocketFrame)) {
             throw new UnsupportedOperationException(String.format("%s frame types not supported", frame.getClass().getName()));
         }
-        webSocketMessageHandler.hand(ctx, frame);
+
+
+        String clientMessage = ((TextWebSocketFrame) frame).text();
+        System.out.println("------");
+        System.out.println(clientMessage);
+        if (CLIENT_ACK_HEARTBEAT.equals(clientMessage)){// 心跳检测,不处理
+            return;
+        }
+
     }
+    // 客户端响应心跳字符串
+    private static final String CLIENT_ACK_HEARTBEAT = "ACK_HEARTBEAT";
+
 
     private static void sendHttpResponse(ChannelHandlerContext ctx, FullHttpRequest req, FullHttpResponse res) {
         if (res.status().code() != 200) {
