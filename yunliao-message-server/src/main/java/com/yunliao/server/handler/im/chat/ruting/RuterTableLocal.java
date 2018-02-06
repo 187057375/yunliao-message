@@ -40,7 +40,7 @@ public class RuterTableLocal {
                 //todo 广播寻址
                 //消息回去继续等待发送？是否需要延长几秒再发？
                 //MessageQueue.push(message.getRaw());
-                throw  new Exception("just now not support cluster searchAndSetRuter");
+                throw  new Exception("没有找到目标");
             }
         }else{
             throw  new Exception(message.getFromChanel()+"没有登录");

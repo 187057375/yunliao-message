@@ -9,14 +9,7 @@ import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.CharsetUtil;
 
-/**
- * 描述: 心跳检测
- * 创建人: SXF
- * 创建时间: 2017/1/3 10:57.
- * Version: 1.0.0
- * 修改人:
- * 修改时间:
- */
+
 public class WebSocketHeartBeatHandler extends ChannelInboundHandlerAdapter {
 
     @Override
