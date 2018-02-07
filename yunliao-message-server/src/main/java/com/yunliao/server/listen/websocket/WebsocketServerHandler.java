@@ -100,8 +100,8 @@ public class WebsocketServerHandler extends SimpleChannelInboundHandler<Object> 
 
 
         String clientMessage = ((TextWebSocketFrame) frame).text();
-        logger.info("--------websocket frame-------------");
-        logger.info(clientMessage);
+        //logger.info("--------websocket frame-------------");
+        //logger.info(clientMessage);
 
         if (CLIENT_ACK_HEARTBEAT.equals(clientMessage)){// 心跳检测,不处理
             return;

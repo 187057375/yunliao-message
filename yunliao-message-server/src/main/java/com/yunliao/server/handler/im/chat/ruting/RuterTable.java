@@ -22,8 +22,8 @@ public class RuterTable {
     public static boolean redisRuteTable = false;
 
     public static void searchAndSetRuter(Message message) throws Exception {
-        UserSession fromSession = (UserSession) chanelSessioinMap.get(message.getFromChanel());
-        if(fromSession != null){
+        //UserSession fromSession = (UserSession) chanelSessioinMap.get(message.getFromChanel());
+        //if(fromSession != null){
             String body = new String(message.getBody());
             ChatMessage chatMessage = JSON.parseObject(body, ChatMessage.class);
             //本地查找
@@ -40,9 +40,9 @@ public class RuterTable {
                 clusterMessage.setToId(chatMessage.getToId());
                 RuterTableForOther.findServer(clusterMessage);
             }
-        }else{
-            throw  new Exception(message.getFromChanel()+"没有登录");
-        }
+        //}else{
+        //    throw  new Exception(message.getFromChanel()+"没有登录");
+        //}
 
     }
 }

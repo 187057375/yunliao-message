@@ -1,6 +1,7 @@
 package com.yunliao.server.cluster.client;
 
 import com.alibaba.fastjson.JSON;
+import com.yunliao.server.cluster.transport.SendClusterMessage;
 import com.yunliao.server.cluster.transport.message.ClusterMessage;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -41,14 +42,22 @@ public final class ClusterClient {
 
                 //ByteBuf buf = Unpooled.copiedBuffer(msg.getBytes("UTF-8"));
                 //channel.writeAndFlush(buf);
-                f.channel().closeFuture().sync();
+                //f.channel().closeFuture().sync();
             } finally {
-                group.shutdownGracefully();
+                //group.shutdownGracefully();
             }
         }else{
-            String msg = JSON.toJSONString(clusterMessage);
-            ByteBuf buf = Unpooled.copiedBuffer(msg.getBytes("UTF-8"));
-            channel.writeAndFlush(buf);
+
+            if(channel.isActive()){
+                String msg = JSON.toJSONString(clusterMessage);
+                ByteBuf buf = Unpooled.copiedBuffer(msg.getBytes("UTF-8"));
+                channel.writeAndFlush(buf);
+            }else{
+                channel.closeFuture();
+                channel=null;
+                ClusterClient.clientChanelMap.remove(host +":"+ port);
+                SendClusterMessage.send(clusterMessage);
+            }
         }
     }
 }

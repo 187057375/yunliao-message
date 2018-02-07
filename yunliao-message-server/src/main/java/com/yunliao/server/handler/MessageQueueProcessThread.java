@@ -14,6 +14,8 @@ import com.yunliao.server.handler.im.chat.MessageHandlerChat;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 
+import java.util.Date;
+
 public class MessageQueueProcessThread implements Runnable {
 
     private static final Logger logger = Logger.getLogger(MessageQueueProcessThread.class);
@@ -25,8 +27,8 @@ public class MessageQueueProcessThread implements Runnable {
         logger.info("MessageQueueProcessThread 启动:"+Thread.currentThread().getId());
         do {
             try {
-                logger.info("处理数据");
                 byte[] in = (byte[]) MessageQueue.poll();
+                System.out.println(new Date().toLocaleString());
                 if(in == null){
                     Thread.sleep(100);
                 }else{
@@ -54,6 +56,8 @@ public class MessageQueueProcessThread implements Runnable {
                 e.printStackTrace();
             }
         } while (run);
+        logger.info("MessageQueueProcessThread 异常退出:"+Thread.currentThread().getId());
+        System.exit(0);
 
     }
 

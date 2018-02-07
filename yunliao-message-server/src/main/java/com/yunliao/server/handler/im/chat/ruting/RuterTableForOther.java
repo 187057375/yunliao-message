@@ -12,6 +12,7 @@ public class RuterTableForOther {
 
     public static void findServer(ClusterMessage clusterMessage) throws Exception {
 
+        //查找//消息接收人 toId 所在ip
         if (true) {
             System.out.println(clusterMessage.getToId());
             clusterMessage.setToIp("172.28.1.12");
