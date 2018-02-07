@@ -25,6 +25,7 @@ public class MessageQueueProcessThread implements Runnable {
         logger.info("MessageQueueProcessThread 启动:"+Thread.currentThread().getId());
         do {
             try {
+                logger.info("处理数据");
                 byte[] in = (byte[]) MessageQueue.poll();
                 if(in == null){
                     Thread.sleep(100);

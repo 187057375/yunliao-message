@@ -10,6 +10,10 @@ public class WebsoketController {
         return"/websocket/test";
     }
 
+    @RequestMapping({ "/websocket/testCluster"})
+    public String testCluster(){
+        return"/websocket/testCluster";
+    }
 
 
 }

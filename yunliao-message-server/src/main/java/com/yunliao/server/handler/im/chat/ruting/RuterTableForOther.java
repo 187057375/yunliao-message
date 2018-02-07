@@ -14,13 +14,20 @@ public class RuterTableForOther {
 
         if (true) {
             System.out.println(clusterMessage.getToId());
-            clusterMessage.setToIp("");
-            clusterMessage.setToPort(8888);
+            clusterMessage.setToIp("172.28.1.12");
+            clusterMessage.setToPort(9001);
             SendClusterMessage.send(clusterMessage);
         } else {//没有查询到，
             // TODO: 18/2/6
             //1,放入数据库，上线时候一次查询
             throw  new Exception("没有找到目标,离线消息");
         }
+    }
+
+    public static void main(String[] args) throws Exception{
+        ClusterMessage clusterMessage = new ClusterMessage();
+        clusterMessage.setToIp("172.28.1.12");
+        clusterMessage.setToPort(9001);
+        SendClusterMessage.send(clusterMessage);
     }
 }

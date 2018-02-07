@@ -1,6 +1,7 @@
 package com.yunliao.server;
 
 
+import com.yunliao.server.cluster.server.TcpClusterServer;
 import com.yunliao.server.handler.MessageQueueProcessServer;
 import com.yunliao.server.listen.tcp.TcpServer;
 import com.yunliao.server.listen.websocket.WebsocketServer;
@@ -35,6 +36,12 @@ public class Application {
             MessageQueueProcessServer.start(1);
         } catch (Exception e){
             logger.error("启动消息解析服务失败", e);
+        }
+        //启动集群通信端口...
+        try{
+            TcpClusterServer.start(9001);
+        } catch (Exception e){
+            logger.error("启动集群通信端口", e);
         }
     }
 

@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>UserInfo</title>
+</head>
+<body>
+<h3>websoket im 测试</h3>
+
+
+<input id="testRegister" value="13055557777"/>
+<button onclick="register()">注册</button>
+
+<p></p>
+to
+<input id="toUser" value="13055556666"/>:
+<input id="testMsg" value="hello"/>
+<button onclick="sendMsg()">发送</button>
+
+<p></p>
+
+<textarea id="msgPanel"></textarea>
+</body>
+
+<script type="text/javascript" src="/js/jquery.js" ></script>
+<script type="text/javascript" src="/js/yunliaocluster.js" ></script>
+
+<script>
+
+
+    var websocket;
+    $(document).ready(function(){
+        websocket = connectYunliaoServer();
+    });
+
+
+</script>
+
+</html>
