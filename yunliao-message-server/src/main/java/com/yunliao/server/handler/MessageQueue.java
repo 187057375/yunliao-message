@@ -18,4 +18,8 @@ public class MessageQueue {
     public static void push(Object message) throws InterruptedException{
         mesaageQueue.put(message);
     }
+
+    public static long size(){
+        return  mesaageQueue.size();
+    }
 }

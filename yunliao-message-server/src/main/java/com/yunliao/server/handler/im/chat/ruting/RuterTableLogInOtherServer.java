@@ -8,11 +8,12 @@ import com.yunliao.server.cluster.transport.message.ClusterMessage;
  * @version V1.0 创建时间：18/2/1
  *          Copyright 2018 by PreTang
  */
-public class RuterTableForOther {
+public class RuterTableLogInOtherServer {
 
     public static void findServer(ClusterMessage clusterMessage) throws Exception {
 
         //查找//消息接收人 toId 所在ip
+        //TODO
         if (true) {
             System.out.println(clusterMessage.getToId());
             clusterMessage.setToIp("172.28.1.12");

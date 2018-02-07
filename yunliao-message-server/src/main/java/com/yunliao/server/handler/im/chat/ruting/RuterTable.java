@@ -38,7 +38,7 @@ public class RuterTable {
                 clusterMessage.setMessage(message);
                 clusterMessage.setType(ClusterMessage.TYPE_CHAT);
                 clusterMessage.setToId(chatMessage.getToId());
-                RuterTableForOther.findServer(clusterMessage);
+                RuterTableLogInOtherServer.findServer(clusterMessage);
             }
         //}else{
         //    throw  new Exception(message.getFromChanel()+"没有登录");

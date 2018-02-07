@@ -14,8 +14,6 @@ import com.yunliao.server.handler.im.chat.MessageHandlerChat;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 
-import java.util.Date;
-
 public class MessageQueueProcessThread implements Runnable {
 
     private static final Logger logger = Logger.getLogger(MessageQueueProcessThread.class);
@@ -28,7 +26,7 @@ public class MessageQueueProcessThread implements Runnable {
         do {
             try {
                 byte[] in = (byte[]) MessageQueue.poll();
-                System.out.println(new Date().toLocaleString());
+                //System.out.println(new Date().toLocaleString());
                 if(in == null){
                     Thread.sleep(100);
                 }else{
@@ -47,7 +45,6 @@ public class MessageQueueProcessThread implements Runnable {
                             throw new Exception("暂时还不支持");
                         }
                     }else{
-
                         logger.info("非法消息:"+ Hex.encodeHexString(in));
                         logger.info("       :"+ new String(in));
                     }
@@ -57,14 +54,12 @@ public class MessageQueueProcessThread implements Runnable {
             }
         } while (run);
         logger.info("MessageQueueProcessThread 异常退出:"+Thread.currentThread().getId());
-        System.exit(0);
+        //System.exit(0);
 
     }
 
     /**
      * 停止线程
-     *
-     * @author peter 2016年5月30日
      */
     public void stop() {
         run = false;
