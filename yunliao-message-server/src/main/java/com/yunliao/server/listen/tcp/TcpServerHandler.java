@@ -26,7 +26,7 @@ public class TcpServerHandler extends ChannelInboundHandlerAdapter {
             buf.readBytes(message,ChannelMap.channelIdLenth,buf.readableBytes());
 
             //String mystr = new String(message);
-            //System.out.println("server received data :" + mystr);
+            //System.out.println("server received getData :" + mystr);
             //ctx.channel().writeAndFlush(mystr);//写回数据，
 
             MessageQueue.push(message);

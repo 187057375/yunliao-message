@@ -1,6 +1,8 @@
 package com.yunliao.server.cluster.zk.health;
 
+import com.alibaba.fastjson.JSON;
 import com.yunliao.server.cluster.zk.Zookeeper;
+import org.apache.curator.framework.CuratorFramework;
 
 import java.net.InetAddress;
 import java.util.List;
@@ -10,10 +12,15 @@ import java.util.List;
  * @version V1.0 创建时间：18/2/7
  *          Copyright 2018 by PreTang
  */
-public class ServerRegister {
+public class ServerOperation {
+
+    public  static  CuratorFramework client = Zookeeper.newClient();
+    static {
+        client.start();
+    }
 
 
-    public void register() throws Exception {
+    public  static  void register(String path,String ip,int port,String hostName) throws Exception {
        /* Map map = new HashMap();
         map.put("host.name", InetAddress.getLocalHost().getCanonicalHostName());
         map.put("java.version", System.getProperty("java.version", "<NA>"));
@@ -39,22 +46,45 @@ public class ServerRegister {
         /*if (Zookeeper.client.checkExists().forPath("/yunliaomessage/server") != null) {
             System.out.println("已经存在");
         }*/
-        Zookeeper.client.create().creatingParentsIfNeeded().forPath("/yunliaomessage/ggggg",  InetAddress.getLocalHost().getCanonicalHostName().getBytes());
-       // Zookeeper.client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath("/yunliaomessage/server",  InetAddress.getLocalHost().getCanonicalHostName().getBytes());
-       // Zookeeper.client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath("/yunliaomessage/im", "123456".getBytes());
+
+
+        ServerMeta serverMeta  =  new ServerMeta();
+        serverMeta.setIp(ip);
+        serverMeta.setPort(port);
+        serverMeta.setHostName(hostName);
+        String data = JSON.toJSONString(serverMeta);
+        client.create().creatingParentsIfNeeded().forPath(path,data.getBytes("UTF-8"));
 
     }
-    public void list() throws Exception{
-        List<String> watched = Zookeeper.client.getChildren().watched().forPath("/yunliaomessage");
+
+
+    public  static  void list(String path) throws Exception{
+        //CuratorFramework client = Zookeeper.newClient();
+        //client.start();
+        List<String> watched =  client.getChildren().watched().forPath(path);
         System.out.println(watched);
     }
-    public void data() throws Exception{
-        System.out.println(new String(Zookeeper.client.getData().forPath("/yunliaomessage/ggggg"),"UTF-8"));
+
+
+    public static  ServerMeta getData(String path) throws Exception{
+        String dataStr = new String(client.getData().forPath(path),"UTF-8");
+        ServerMeta serverMeta = JSON.parseObject(dataStr,ServerMeta.class);
+        return serverMeta;
     }
+
+    public static  void setData( ServerMeta serverMeta,String path) throws Exception{
+        String data = JSON.toJSONString(serverMeta);
+        client.setData().forPath(path,data.getBytes("UTF-8"));
+    }
+
+
     public static void main(String[] args) throws Exception {
-        ServerRegister serverRegister = new ServerRegister();
-        //serverRegister.register();
-        //serverRegister.list();
-        serverRegister.data();
+        //ServerOperation.register(Zookeeper.YUNLIAO_ZK_PAHT,"127.0.0.1",9000, InetAddress.getLocalHost().getCanonicalHostName());
+        //ServerOperation.list(Zookeeper.YUNLIAO_ZK_BASEPAHT );
+        //ServerMeta serverMeta = ServerOperation.getData(Zookeeper.YUNLIAO_ZK_PAHT);
+        //System.out.println(JSON.toJSONString(serverMeta));
+
+        ServerOperation.register("/yunliao/127.0.0.2:9000","127.0.0.2",9000, InetAddress.getLocalHost().getCanonicalHostName());
+
     }
 }

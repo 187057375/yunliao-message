@@ -1,6 +1,5 @@
-package com.yunliao.server.cluster.zk.health;
+package com.yunliao.server.cluster.zk;
 
-import com.yunliao.server.cluster.zk.Zookeeper;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.utils.CloseableUtils;
 import org.apache.zookeeper.data.Stat;
@@ -12,12 +11,12 @@ import org.apache.zookeeper.data.Stat;
  */
 public class ZKDemo
 {
-    private static CuratorFramework client = Zookeeper.client;
     private static final String PATH = "/crud";
 
     public static void main(String[] args) {
+        CuratorFramework client = Zookeeper.newClient();
+        client.start();
         try {
-
             client.create().forPath(PATH, "I love messi".getBytes());
 
             byte[] bs = client.getData().forPath(PATH);

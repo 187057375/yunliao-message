@@ -11,11 +11,11 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 
 public class Zookeeper {
-    public static String zkConnString = "127.0.0.1:2181";
-    public static CuratorFramework client = null;
-    static {
-        client = CuratorFrameworkFactory.newClient(zkConnString,  new ExponentialBackoffRetry(1000, 3));
-        client.start();
+    public static String YUNLIAO_ZK_BASEPAHT="/yunliao";
+    public static String YUNLIAO_ZK_PAHT="/yunliao"+"/127.0.0.1"+9000;
+    public static CuratorFramework newClient() {
+        String connectionString = "127.0.0.1:2181";
+        ExponentialBackoffRetry retryPolicy = new ExponentialBackoffRetry(1000, 3);
+        return CuratorFrameworkFactory.newClient(connectionString, retryPolicy);
     }
-
 }

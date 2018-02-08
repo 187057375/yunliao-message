@@ -14,7 +14,7 @@ public class EchoClientHandlerBak extends ChannelInboundHandlerAdapter {
         ByteBuf buf = (ByteBuf) msg;
         byte[] message = new byte[buf.readableBytes()];
         buf.readBytes(message);
-        System.out.println("client received data :" + new String(message));
+        System.out.println("client received getData :" + new String(message));
 
     }
 
