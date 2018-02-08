@@ -6,15 +6,17 @@ package com.yunliao.server.cluster.zk;
  * Copyright 2018 by PreTang
  */
 
+import com.yunliao.server.Application;
+import com.yunliao.server.util.ConfigUtil;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 
 public class Zookeeper {
     public static String YUNLIAO_ZK_BASEPAHT="/yunliao";
-    public static String YUNLIAO_ZK_PAHT="/yunliao"+"/127.0.0.1"+9000;
+    public static String YUNLIAO_ZK_PAHT="/yunliao"+"/"+ Application.serverIp;
     public static CuratorFramework newClient() {
-        String connectionString = "127.0.0.1:2181";
+        String connectionString = ConfigUtil.getProperty("yunliao.cluster.zookeeper");
         ExponentialBackoffRetry retryPolicy = new ExponentialBackoffRetry(1000, 3);
         return CuratorFrameworkFactory.newClient(connectionString, retryPolicy);
     }

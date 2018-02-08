@@ -5,6 +5,7 @@ import com.yunliao.server.cluster.transport.message.ClusterMessage;
 import com.yunliao.server.handler.Message;
 import com.yunliao.server.handler.im.UserSession;
 import com.yunliao.server.handler.im.chat.send.SendMessage;
+import com.yunliao.server.util.ConfigUtil;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -34,15 +35,17 @@ public class RuterTable {
                 message.setFromId(chatMessage.getFromId());
                 SendMessage.send(message);
             } else {//本地没有查询到，去redis查，或者主路由查（还没有实现）
-                ClusterMessage clusterMessage = new ClusterMessage();
-                clusterMessage.setMessage(message);
-                clusterMessage.setType(ClusterMessage.TYPE_CHAT);
-                clusterMessage.setToId(chatMessage.getToId());
-                RuterTableLogInOtherServer.findServer(clusterMessage);
+                String supportCluster = ConfigUtil.getProperty("yunliao.cluster");
+                if("true".equals(supportCluster)){
+                    ClusterMessage clusterMessage = new ClusterMessage();
+                    clusterMessage.setMessage(message);
+                    clusterMessage.setType(ClusterMessage.TYPE_CHAT);
+                    clusterMessage.setToId(chatMessage.getToId());
+                    RuterTableLogInOtherServer.findServer(clusterMessage);
+                }else{
+                    throw  new Exception(message.getFromChanel()+"用户没有登录,请实现离线消息的处理......");
+                }
             }
-        //}else{
-        //    throw  new Exception(message.getFromChanel()+"没有登录");
-        //}
 
     }
 }

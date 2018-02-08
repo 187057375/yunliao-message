@@ -20,7 +20,7 @@ public class ServerOperation {
     }
 
 
-    public  static  void register(String path,String ip,int port,String hostName) throws Exception {
+    public  static  void register(String path,String ip,String hostName) throws Exception {
        /* Map map = new HashMap();
         map.put("host.name", InetAddress.getLocalHost().getCanonicalHostName());
         map.put("java.version", System.getProperty("java.version", "<NA>"));
@@ -50,7 +50,6 @@ public class ServerOperation {
 
         ServerMeta serverMeta  =  new ServerMeta();
         serverMeta.setIp(ip);
-        serverMeta.setPort(port);
         serverMeta.setHostName(hostName);
         String data = JSON.toJSONString(serverMeta);
         client.create().creatingParentsIfNeeded().forPath(path,data.getBytes("UTF-8"));
@@ -84,7 +83,7 @@ public class ServerOperation {
         //ServerMeta serverMeta = ServerOperation.getData(Zookeeper.YUNLIAO_ZK_PAHT);
         //System.out.println(JSON.toJSONString(serverMeta));
 
-        ServerOperation.register("/yunliao/127.0.0.2:9000","127.0.0.2",9000, InetAddress.getLocalHost().getCanonicalHostName());
+        ServerOperation.register("/yunliao/127.0.0.2:9000","127.0.0.2", InetAddress.getLocalHost().getCanonicalHostName());
 
     }
 }

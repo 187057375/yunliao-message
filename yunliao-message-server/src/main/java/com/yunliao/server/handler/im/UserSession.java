@@ -10,10 +10,8 @@ public class UserSession {
     private String userId;
     //网络连接
     private String chanelId;
-    //发送目标登录ip
+    //登录的服务器ip
     private String serverIp;
-    //发送目标登录端口
-    private int serverPort;
 
     public String getUserId() {
         return userId;
@@ -39,11 +37,4 @@ public class UserSession {
         this.serverIp = serverIp;
     }
 
-    public int getServerPort() {
-        return serverPort;
-    }
-
-    public void setServerPort(int serverPort) {
-        this.serverPort = serverPort;
-    }
 }

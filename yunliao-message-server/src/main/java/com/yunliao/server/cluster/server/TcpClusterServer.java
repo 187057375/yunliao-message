@@ -25,7 +25,7 @@ public class TcpClusterServer {
             bootstrap.childHandler(new TcpClusterInitializer());
 
             bootstrap.bind(port).sync();
-            logger.info("TcpServer启动成功,端口:" + port + ".");
+            logger.info("TcpClusterServer启动成功,端口:" + port + ".");
         } catch (Exception e) {
             e.printStackTrace();
             bossGroup.shutdownGracefully();

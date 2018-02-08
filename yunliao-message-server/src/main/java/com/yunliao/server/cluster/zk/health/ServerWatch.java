@@ -22,6 +22,7 @@ public class ServerWatch extends Thread{
     public  static  Map serverMap  =  new HashMap<String,ServerMeta>();
 
     public void run() {
+        System.out.println("ServerWatch启动");
         try {
             CuratorFramework client = Zookeeper.newClient();
             client.start();
