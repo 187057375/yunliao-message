@@ -1,16 +1,14 @@
-package com.yunliao.server.cluster.zk.health;
+package com.yunliao.admin.controller.monitor.zk.health;
 
 import com.alibaba.fastjson.JSON;
-import com.yunliao.server.cluster.zk.Zookeeper;
+import com.yunliao.admin.controller.monitor.websocket.ChannelMap;
+import com.yunliao.admin.controller.monitor.websocket.Message;
+import com.yunliao.admin.controller.monitor.zk.Zookeeper;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import org.apache.log4j.Logger;
 
 /**
  * @author peter
@@ -19,10 +17,12 @@ import java.util.Set;
  */
 public class ServerWatch extends Thread{
 
-    public  static  Map serverMap  =  new HashMap<String,ServerMeta>();
+    private static final Logger logger = Logger.getLogger(ServerWatch.class);
 
     public void run() {
-        System.out.println("ServerWatch启动");
+        //System.out.println("ServerWatch启动");
+        logger.info("ServerWatch启动.");
+
         try {
             CuratorFramework client = Zookeeper.newClient();
             client.start();
@@ -40,40 +40,28 @@ public class ServerWatch extends Thread{
                             data = event.getData().getData();
                             dataStr = new String(data);
                             serverMeta = JSON.parseObject(dataStr,ServerMeta.class);
-                            serverMap.put( event.getData().getPath(),serverMeta);
-                            //TODO
-                            //ClusterClient.addClusterServerClient( );
+                            Message messageAdd= new Message();
+                            messageAdd.setMsg(serverMeta);
+                            ChannelMap.sendMsg(messageAdd);
                             break;
                         case CHILD_UPDATED:
                             System.out.println("update " + event.getData().getPath());
                             data = event.getData().getData();
                             dataStr = new String(data);
                             serverMeta = JSON.parseObject(dataStr,ServerMeta.class);
-                            serverMap.put(event.getData().getPath(),serverMeta);
+                            Message messageUpdate = new Message();
+                            messageUpdate.setMsg(serverMeta);
+                            ChannelMap.sendMsg(messageUpdate);
                             break;
                         case CHILD_REMOVED:
                             System.out.println("removed " + event.getData().getPath());
-                            serverMap.remove(event.getData().getPath());
                             break;
                         default:
                             break;
                     }
-
                     //System.out.println(new String(event.getData().getData(), "UTF-8"));
                 }
             });
-            do {
-                Set<String> keys = serverMap.keySet();
-                Iterator iterator =  keys.iterator();
-                while (iterator.hasNext()){
-                    String  serverKey =   (String) iterator.next();
-                    ServerMeta serverMeta =   (ServerMeta)serverMap.get(serverKey);
-                    System.out.println("[Show] Server:"+serverMeta.getIp()+":"+serverMeta.getPort()+" queueSize="+serverMeta.getMessageQueueSize());
-                }
-                Thread.sleep(5000);
-            }while (true);
-            //Thread.sleep(Long.MAX_VALUE);
-
         } catch (Exception e) {
             e.printStackTrace();
         }

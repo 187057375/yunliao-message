@@ -47,13 +47,15 @@ public class ServerOperation {
             System.out.println("已经存在");
         }*/
 
-
-        ServerMeta serverMeta  =  new ServerMeta();
-        serverMeta.setIp(ip);
-        serverMeta.setHostName(hostName);
-        String data = JSON.toJSONString(serverMeta);
-        client.create().creatingParentsIfNeeded().forPath(path,data.getBytes("UTF-8"));
-
+        if (client.checkExists().forPath(path) != null) {
+            System.out.println("已经存在");
+        }else{
+            ServerMeta serverMeta  =  new ServerMeta();
+            serverMeta.setIp(ip);
+            serverMeta.setHostName(hostName);
+            String data = JSON.toJSONString(serverMeta);
+            client.create().creatingParentsIfNeeded().forPath(path,data.getBytes("UTF-8"));
+        }
     }
 
 

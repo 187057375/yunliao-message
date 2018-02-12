@@ -4,6 +4,7 @@ package com.yunliao.server;
 import com.yunliao.server.cluster.server.TcpClusterServer;
 import com.yunliao.server.cluster.zk.Zookeeper;
 import com.yunliao.server.cluster.zk.health.ServerOperation;
+import com.yunliao.server.cluster.zk.health.ServerStatusReportThread;
 import com.yunliao.server.cluster.zk.health.ServerWatch;
 import com.yunliao.server.handler.MessageQueueProcessServer;
 import com.yunliao.server.listen.tcp.TcpServer;
@@ -61,6 +62,10 @@ public class Application  {
                 //向zookeeper注册
                 String ip = InetAddress.getLocalHost().getCanonicalHostName();
                 ServerOperation.register(Zookeeper.YUNLIAO_ZK_BASEPAHT+"/"+serverIp,serverIp, serverIp);
+
+                //向zk报告状态
+                ServerStatusReportThread serverStatusReportThread = new ServerStatusReportThread();
+                serverStatusReportThread.start();
             }
         } catch (Exception e) {
             logger.error("集群启动失败", e);

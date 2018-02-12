@@ -56,7 +56,7 @@ function sendMsg() {//发送消息
 
 
 function connectYunliaoServer(){
-    var url = "ws://localhost:8999";
+    var url = "ws://localhost:9999";
     websocket = new WebSocket(url);
     websocket.onopen = function(){
 

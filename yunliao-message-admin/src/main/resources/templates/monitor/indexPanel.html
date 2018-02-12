@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>monitor</title>
+</head>
+<body>
+<h3>yunliao monitor</h3>
+<textarea id="msgPanel"></textarea>
+
+
+</body>
+
+<script type="text/javascript" src="/js/jquery.js" ></script>
+<script type="text/javascript" src="/js/monitor/yunliao-monitor.js" ></script>
+<script>
+
+
+    var websocket;
+    $(document).ready(function(){
+        websocket = connectYunliaoServer();
+        //sendMsg("list");
+    });
+
+
+</script>
+
+</html>
