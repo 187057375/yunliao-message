@@ -45,7 +45,7 @@ public class ServerWatch extends Thread{
                             ChannelMap.sendMsg(messageAdd);
                             break;
                         case CHILD_UPDATED:
-                            System.out.println("update " + event.getData().getPath());
+                           // System.out.println("update " + event.getData().getPath());
                             data = event.getData().getData();
                             dataStr = new String(data);
                             serverMeta = JSON.parseObject(dataStr,ServerMeta.class);

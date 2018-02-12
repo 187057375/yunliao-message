@@ -109,10 +109,11 @@ public class WebsocketServerHandler extends SimpleChannelInboundHandler<Object> 
         if("list".equals(clientMessage)){
             List<String> serverList = ServerOperation.list(Zookeeper.YUNLIAO_ZK_BASEPAHT);
             for (String serverPath:serverList){
-                ServerMeta serverMeta = ServerOperation.getData(serverPath);
+                ServerMeta serverMeta = ServerOperation.getData(Zookeeper.YUNLIAO_ZK_BASEPAHT+"/"+serverPath);
                 Message message = new Message();
                 message.setMsg(serverMeta);
                 ByteBuf buf = Unpooled.copiedBuffer(JSON.toJSONString(message).getBytes("UTF-8"));
+                TextWebSocketFrame webSocketFrame = new TextWebSocketFrame(buf);
                 ctx.channel().writeAndFlush(buf);
             }
         }
