@@ -114,8 +114,9 @@ public class WebsocketServerHandler extends SimpleChannelInboundHandler<Object> 
                 message.setMsg(serverMeta);
                 ByteBuf buf = Unpooled.copiedBuffer(JSON.toJSONString(message).getBytes("UTF-8"));
                 TextWebSocketFrame webSocketFrame = new TextWebSocketFrame(buf);
-                ctx.channel().writeAndFlush(buf);
+                ctx.channel().writeAndFlush(webSocketFrame);
             }
+
         }
 
 
