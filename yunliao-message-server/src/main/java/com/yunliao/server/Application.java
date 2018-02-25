@@ -22,31 +22,29 @@ public class Application  {
     public static  int clusterPort=9001;//集群服务器通信端口
 
     public static void start() throws Exception{
-        //启动服务
+        //本机服务器ip
         Application.serverIp  = InetAddress.getLocalHost().getHostAddress();
-        startServer();
-    }
 
-    private static void startServer(){
-        //启动TCP监听服务
+        //1启动TCP监听服务
         try{
             TcpServer.start(Integer.valueOf(ConfigUtil.getProperty("yunliao.server.port.tcp")));
         } catch (Exception e){
             logger.error("启动TCP服务失败", e);
         }
-        //启动websocket监听服务
+        //2启动websocket监听服务
         try{
             WebsocketServer.start(Integer.valueOf(ConfigUtil.getProperty("yunliao.server.port.websocket")));
         } catch (Exception e){
             logger.error("启动websocket服务失败", e);
         }
-        //启动消息解析服务队列线程
+        //3启动消息解析服务队列线程
         try{
             MessageQueueProcessServer.start(1);
         } catch (Exception e){
             logger.error("启动消息解析服务失败", e);
         }
 
+        //集群模式
         try {
             String supportCluster = ConfigUtil.getProperty("yunliao.cluster");
             if("true".equals(supportCluster)){
